@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otimizador de Layout e Logística - Projeto Integrador UNIVESP</title>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <div class="container mx-auto p-6 max-w-5xl">
+        <!-- Cabeçalho -->
+        <header class="bg-blue-900 text-white p-6 rounded-lg shadow-md mb-6">
+            <h1 class="text-2xl font-bold">📦 Simulador de Otimização de Armazém & Logística</h1>
+            <p class="text-blue-200 text-sm mt-1">Projeto Integrador | Engenharia de Produção - UNIVESP</p>
+        </header>
+
+        <!-- Seção 1: Classificação ABC e Endereçamento -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">1. Análise Curva ABC & Alocação de Zona</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Nome do Item / SKU:</label>
+                    <input type="text" id="itemName" class="w-full p-2 border rounded" placeholder="Ex: Produto A">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Demanda Mensal (un):</label>
+                    <input type="number" id="itemDemand" class="w-full p-2 border rounded" placeholder="Ex: 1500">
+                </div>
+                <div class="flex items-end">
+                    <button onclick="addItem()" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 font-bold">Adicionar ao Estudo</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 text-left text-sm uppercase">
+                            <th class="py-2 px-4 border-b">Item</th>
+                            <th class="py-2 px-4 border-b">Demanda</th>
+                            <th class="py-2 px-4 border-b">Classificação ABC</th>
+                            <th class="py-2 px-4 border-b">Zona Sugerida de Alocação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemTableBody">
+                        <tr>
+                            <td class="py-2 px-4 border-b">Palete Padrão A</td>
+                            <td class="py-2 px-4 border-b">3500</td>
+                            <td class="py-2 px-4 border-b font-bold text-green-600">Classe A</td>
+                            <td class="py-2 px-4 border-b text-sm text-gray-700">Zona 1 (Próximo à Doca - Baixo Tempo de Ciclo)</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4 border-b">Palete Padrão B</td>
+                            <td class="py-2 px-4 border-b">1200</td>
+                            <td class="py-2 px-4 border-b font-bold text-yellow-600">Classe B</td>
+                            <td class="py-2 px-4 border-b text-sm text-gray-700">Zona 2 (Área Intermediária)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Seção 2: Indicadores de Ergonomia e Segurança (NR-12 / Layout) -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">2. Checklist de Conformidade & Segurança (Layout)</h2>
+            <div class="space-y-3">
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <input type="checkbox" checked class="h-5 w-5 text-blue-600 rounded">
+                    <span class="text-gray-700">Largura mínima dos corredores compatível com movimentação de empilhadeiras e transpaleteiras.</span>
+                </label>
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <input type="checkbox" checked class="h-5 w-5 text-blue-600 rounded">
+                    <span class="text-gray-700">Delimitação clara de pisos e faixas de segurança conforme normas regulamentadoras.</span>
+                </label>
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <input type="checkbox" class="h-5 w-5 text-blue-600 rounded">
+                    <span class="text-gray-700">Ergonomia no picking: produtos de maior giro posicionados na altura ideal (entre a cintura e os ombros).</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addItem() {
+            const name = document.getElementById('itemName').value;
+            const demand = parseInt(document.getElementById('itemDemand').value);
+
+            if (!name || isNaN(demand)) {
+                alert('Por favor, preencha o nome e a demanda corretamente.');
+                return;
+            }
+
+            let classification = 'Classe C';
+            let zone = 'Zona 3 (Área Mais Distante)';
+            let color = 'text-red-600';
+
+            if (demand > 2000) {
+                classification = 'Classe A';
+                zone = 'Zona 1 (Próximo à Doca - Otimização Máxima)';
+                color = 'text-green-600';
+            } else if (demand > 800) {
+                classification = 'Classe B';
+                zone = 'Zona 2 (Área Intermediária)';
+                color = 'text-yellow-600';
+            }
+
+            const tbody = document.getElementById('itemTableBody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="py-2 px-4 border-b">${name}</td>
+                <td class="py-2 px-4 border-b">${demand}</td>
+                <td class="py-2 px-4 border-b font-bold ${color}">${classification}</td>
+                <td class="py-2 px-4 border-b text-sm text-gray-700">${zone}</td>
+            `;
+            tbody.appendChild(row);
+
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemDemand').value = '';
+        }
+    </script>
+</body>
+</html>
